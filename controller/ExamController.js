@@ -28,5 +28,33 @@ const createExam = async (req, res) => {
       res.status(500).json({ message: 'Failed to create exam.', error: error.message })
     }
   }
+  
+
+  const exams = async (req, res) => {
+    try {
+      const { examTitle } = req.params
+  
+      const exam = await ExamModel.findOne({ exam_title: examTitle })
+  
+      if (!exam) {
+        return res.status(404).json({
+          message: 'Exam not found'
+        })
+      }
+  
+      res.status(200).json({
+        message: 'Exam fetched successfully',
+        exam 
+      })
+    } catch (error) {
+      console.error(error)
+      res.status(500).json({
+        message: 'Failed to retrieve exams. Please try again.',
+        error: error.message
+      })
+    }
+  }
+
+  
 
 module.exports = { createExam, exams, editExam, examsList }
