@@ -44,12 +44,12 @@ const ExamSchema = mongoose.Schema({
         questionSchema
     ],
     timeAllocated: {
-        type: Number,  // Store time in minutes (Number type)
-        required: true,  // Make sure time is provided when creating the exam
+        type: Number,
+        required: true, 
     },
     dueDate: {
-        type: Date,  // Store due date as a Date object
-        required: true,  // Make sure the due date is provided
+        type: Date, 
+        required: true, 
       },
     created_at: {
         type: Date,
