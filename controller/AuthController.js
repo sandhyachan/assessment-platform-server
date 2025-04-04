@@ -87,5 +87,47 @@ const userLogin = async (req, res) => {
         })
 }
 
+const updateUser = async (req, res) => {
+    const { username } = req.user
+    const { firstName, lastName, email, phoneNumber} = req.body
+    
+    try {
+        if (!firstName || !lastName || !email || !phoneNumber) {
+            return res.status(400).json({
+                message: "All fields are required."
+            })
+        }
+    
+        const matchingUser = await UserModel.findOne({ username })
+    
+        if (!matchingUser) {
+            return res.status(404).json({
+                message: "User not found. Please log in."
+            });
+        }
+        
+        matchingUser.firstName = firstName;
+        matchingUser.lastName = lastName;
+        matchingUser.email = email;
+        matchingUser.phoneNumber = phoneNumber;
+    
+        // Save the updated user to the database
+        await matchingUser.save();
+    
+        // Return success res
+        return res.status(200).json({
+            message: "User information updated successfully.",
+            data: matchingUser
+        })
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            message: "Something went wrong.",
+            error: error.message
+        })
+    }
+}
+
+
 
 module.exports = { userLogin, userRegistration, forgotPassword, updateUser, updatePassword }
