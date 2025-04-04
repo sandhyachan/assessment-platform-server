@@ -79,4 +79,35 @@ const createExam = async (req, res) => {
     }
   }  
 
+  const editExam = async (req, res) => {
+
+    const {examTitle} = req.params
+    const { exam_title, exam_description, questions, timeAllocated, dueDate } =  req.body
+  
+    if (!exam_title || !exam_description || !Array.isArray(questions) || questions.length === 0) {
+      return res.status(400).json({ message: 'Please provide all required fields and ensure questions array is not empty.' })
+    }
+  
+    try {
+      const exam = await ExamModel.findOne({ exam_title: examTitle })
+  
+      if (!exam) {
+        return res.status(404).json({ message: 'Exam not found' })
+      }
+  
+      exam.exam_title = exam_title 
+      exam.exam_description = exam_description 
+      exam.questions = questions
+      exam.timeAllocated = timeAllocated
+      exam.dueDate = dueDate
+  
+      await exam.save()
+  
+      res.status(200).json({ message: 'Exam updated successfully', exam })
+    } catch (error) {
+      console.error(error)
+      res.status(500).json({ message: 'Failed to update exam.', error: error.message })
+    }
+  }
+
 module.exports = { createExam, exams, editExam, examsList }
