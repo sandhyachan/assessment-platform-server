@@ -44,7 +44,7 @@ const createExam = async (req, res) => {
   
       res.status(200).json({
         message: 'Exam fetched successfully',
-        exam 
+        exam  
       })
     } catch (error) {
       console.error(error)
@@ -55,6 +55,28 @@ const createExam = async (req, res) => {
     }
   }
 
-  
+  const examsList = async (req, res) => {
+    try {
+      // Fetch all exams created by the teacher (adjust filtering if needed)
+      const exams = await ExamModel.find();  // You can add a teacher filter here if necessary
+    
+      if (exams.length === 0) {
+        return res.status(404).json({
+          message: 'No exams found'
+        });
+      }
+    
+      res.status(200).json({
+        message: 'Exams fetched successfully',
+        exams
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({
+        message: 'Failed to retrieve exams. Please try again.',
+        error: error.message
+      });
+    }
+  }  
 
 module.exports = { createExam, exams, editExam, examsList }
