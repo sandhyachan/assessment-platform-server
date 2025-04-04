@@ -56,5 +56,36 @@ const userRegistration = async (req, res) => {
     
 }
 
+const userLogin = async (req, res) => {
+    const { username, password } = req.body
+    if (!username || !password) {
+        return res.status(400).json("Please enter the login details.")
+    }
+    const matchingUser = await UserModel.findOne({username})
+    if (!matchingUser){
+        return res.status(404).json("Username does not exist.")
+    }
+
+    const passwordMatch = await bcrypt.compare(password, matchingUser.password)
+    if (!passwordMatch) {
+        return res.status(400).json({
+            message: "Bad Credentials: Incorrect password."
+        })
+    }
+
+    const token = generateJwtToken({
+        username: matchingUser.username,
+        email: matchingUser.email,
+        accountType: matchingUser.accountType
+    })
+    
+    return res.status(200).json({
+            message: "Login Successful!",
+            success: true,
+            token: token,
+            accountType: matchingUser.accountType
+        })
+}
+
 
 module.exports = { userLogin, userRegistration, forgotPassword, updateUser, updatePassword }
