@@ -4,7 +4,7 @@ const { connectDB } = require('./dbConfig')
 const { userLogin, userRegistration, updateUser, updatePassword, forgotPassword } = require('./controller/AuthController')
 const { UserModel } = require('./model/UserModel')
 const { verifyToken } = require('./middleware/verifyToken')
-const { createExam, exams, editExam, examsList } = require('./controller/ExamController')
+const { createExam, exams, editExam, examsList, allocateStudents } = require('./controller/ExamController')
 const server = express()
 const PORT = 3000
 
@@ -29,6 +29,8 @@ server.put('/exams/:examTitle', editExam)
 server.get('/exams/:examTitle', exams)
 
 server.get('/exam-lists', examsList)
+
+server.post('/exams/allocate/:examTitle', allocateStudents)
 
 server.get('/', async (req, res) => {
     try {
